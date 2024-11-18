@@ -1,20 +1,36 @@
 import json
 import os
 
+# Dynamically determine the directory of the script
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # File to store tasks
-TASKS_FILE = "tasks.json"
+TASKS_FILE = os.path.join(SCRIPT_DIR, "tasks.json")
 
 # Load tasks from the file or create an empty list
 def load_tasks():
+    print(f"Loading tasks from: {TASKS_FILE}")
     if not os.path.exists(TASKS_FILE):
+        print("File not found. Creating a new task list.")
         return []
-    with open(TASKS_FILE, "r") as file:
-        return json.load(file)
+    try:
+        with open(TASKS_FILE, "r") as file:
+            tasks = json.load(file)
+            print(f"Loaded tasks: {tasks}")
+            return tasks
+    except json.JSONDecodeError:
+        print("Error reading tasks file. Returning an empty task list.")
+        return []
 
 # Save tasks to the file
 def save_tasks(tasks):
-    with open(TASKS_FILE, "w") as file:
-        json.dump(tasks, file, indent=4)
+    print(f"Saving tasks to: {TASKS_FILE}")
+    try:
+        with open(TASKS_FILE, "w") as file:
+            json.dump(tasks, file, indent=4)
+            print("Tasks saved successfully.")
+    except Exception as e:
+        print(f"Error saving tasks: {e}")
 
 # Add a new task
 def add_task(title, priority):
@@ -77,28 +93,37 @@ def menu():
         print("5. Search Tasks")
         print("6. Exit")
 
-        choice = input("Choose an option: ")
-        if choice == "1":
-            title = input("Enter task title: ")
-            priority = input("Enter task priority (High/Medium/Low): ")
-            add_task(title, priority)
-        elif choice == "2":
-            view_tasks()
-        elif choice == "3":
-            index = int(input("Enter task number to mark as completed: ")) - 1
-            complete_task(index)
-        elif choice == "4":
-            index = int(input("Enter task number to delete: ")) - 1
-            delete_task(index)
-        elif choice == "5":
-            query = input("Enter search query: ")
-            search_tasks(query)
-        elif choice == "6":
-            print("Exiting the app. Goodbye!")
-            break
-        else:
-            print("Invalid choice. Please try again.")
+        try:
+            choice = input("Choose an option: ")
+            if choice == "1":
+                title = input("Enter task title: ")
+                priority = input("Enter task priority (High/Medium/Low): ")
+                add_task(title, priority)
+            elif choice == "2":
+                view_tasks()
+            elif choice == "3":
+                index = int(input("Enter task number to mark as completed: ")) - 1
+                complete_task(index)
+            elif choice == "4":
+                index = int(input("Enter task number to delete: ")) - 1
+                delete_task(index)
+            elif choice == "5":
+                query = input("Enter search query: ")
+                search_tasks(query)
+            elif choice == "6":
+                print("Exiting the app. Goodbye!")
+                break
+            else:
+                print("Invalid choice. Please try again.")
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
 
 # Run the app
 if __name__ == "__main__":
-    menu()
+    try:
+        menu()
+    except Exception as e:
+        print(f"Critical error: {e}")
+        input("Press Enter to exit...")
