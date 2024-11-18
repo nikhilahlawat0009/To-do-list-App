@@ -1,0 +1,27 @@
+[
+    {
+        "title": "Test Task",
+        "priority": "High",
+        "completed": false
+    },
+    {
+        "title": "Buy groceries",
+        "priority": "Medium",
+        "completed": true
+    },
+    {
+        "title": "Linkedin Post",
+        "priority": "High",
+        "completed": false
+    },
+    {
+        "title": "Job assessments",
+        "priority": "High",
+        "completed": false
+    },
+    {
+        "title": "Buying new swimming costume",
+        "priority": "Low",
+        "completed": false
+    }
+]
